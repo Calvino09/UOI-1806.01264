@@ -124,8 +124,8 @@ def batch_generator(sentences, taggings, steps, training=True):
             break
 
 
-model = build_model(token_num=len(word_dict),
-                    tag_num=len(TAGS))
+model, loss, metrics = build_model(token_num=len(word_dict),
+                                   tag_num=len(TAGS))
 model.summary(line_length=80)
 
 if os.path.exists(MODEL_PATH):
@@ -133,6 +133,7 @@ if os.path.exists(MODEL_PATH):
 
 print('Fitting...')
 for lr in [1e-3, 1e-4, 1e-5]:
+    model.compile(optimizer=keras.optimizers.Adam(lr=lr), loss=loss, metrics=metrics)
     model.fit_generator(
         generator=batch_generator(train_sentences, train_taggings, train_steps),
         steps_per_epoch=train_steps,

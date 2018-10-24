@@ -65,4 +65,4 @@ def build_model(token_num,
         loss=loss,
         metrics={'CRF': crf.accuracy},
     )
-    return model
+    return model, loss, metrics
