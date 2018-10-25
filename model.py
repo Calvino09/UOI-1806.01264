@@ -57,7 +57,7 @@ def build_model(token_num,
     loss = {'CRF': crf.loss_function}
     if return_attention:
         outputs.append(attention)
-        loss['Attention'] = attention_loss(1e-4) # Attention.loss(1e-4)
+        loss['Attention'] = attention_loss(1e-4)
 
     model = keras.models.Model(inputs=input_layer, outputs=outputs)
     model.compile(
@@ -65,4 +65,4 @@ def build_model(token_num,
         loss=loss,
         metrics={'CRF': crf.accuracy},
     )
-    return model, loss, metrics
+    return model

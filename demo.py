@@ -4,6 +4,7 @@ import numpy
 import keras
 import seaborn
 import matplotlib.pyplot as plt
+import keras.backend as K
 from keras_wc_embd import get_dicts_generator, get_batch_input
 from model import build_model
 
@@ -124,8 +125,8 @@ def batch_generator(sentences, taggings, steps, training=True):
             break
 
 
-model, loss, metrics = build_model(token_num=len(word_dict),
-                                   tag_num=len(TAGS))
+model = build_model(token_num=len(word_dict),
+                    tag_num=len(TAGS))
 model.summary(line_length=80)
 
 if os.path.exists(MODEL_PATH):
@@ -133,7 +134,8 @@ if os.path.exists(MODEL_PATH):
 
 print('Fitting...')
 for lr in [1e-3, 1e-4, 1e-5]:
-    model.compile(optimizer=keras.optimizers.Adam(lr=lr), loss=loss, metrics=metrics)
+    # model.optimizer.lr.assign(lr)
+    K.set_value(model.optimizer.lr, lr)
     model.fit_generator(
         generator=batch_generator(train_sentences, train_taggings, train_steps),
         steps_per_epoch=train_steps,
