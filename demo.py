@@ -4,6 +4,7 @@ import numpy
 import keras
 import seaborn
 import matplotlib.pyplot as plt
+import keras.backend as K
 from keras_wc_embd import get_dicts_generator, get_batch_input
 from model import build_model
 
@@ -133,6 +134,8 @@ if os.path.exists(MODEL_PATH):
 
 print('Fitting...')
 for lr in [1e-3, 1e-4, 1e-5]:
+    # model.optimizer.lr.assign(lr)
+    K.set_value(model.optimizer.lr, lr)
     model.fit_generator(
         generator=batch_generator(train_sentences, train_taggings, train_steps),
         steps_per_epoch=train_steps,
